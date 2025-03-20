@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  dfserver:
+    image: dragonflytelescope/dfserver:rpi-dev
+    privileged: true  
+    network_mode: "host"
+    working_dir: /code
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LD_LIBRARY_PATH=/usr/local/lib:/usr/lib
+      - PYTHONPATH=/usr/local/lib/python3.10/site-packages
+    volumes:
+      - /data:/data  # write images to disk
+      - /home/pi/dfserver_yml/config_ip:/etc/config_ip:ro
+      - /home/pi/dfserver_yml/config_json:/etc/config_json:ro
+      - matplotlib_cache:/root/.cache/matplotlib
+      - /sys:/sys:ro
+      - /dev:/dev
+      - /usr/bin/vcgencmd:/usr/bin/vcgencmd #for pi cpu temp
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+      - /dev/vchiq:/dev/vchiq #for pi cpu temp
+    command: uvicorn mocs.rpi.server.main:app --host 0.0.0.0 --port 5001
+volumes:
+  matplotlib_cache:
