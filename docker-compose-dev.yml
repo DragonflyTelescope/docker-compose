@@ -3,6 +3,7 @@ version: '3.8'
 services:
   dfserver:
     image: dragonflytelescope/dfserver:rpi-dev
+    container_name: dfserver-dev
     privileged: true  
     network_mode: "host"
     working_dir: /code
